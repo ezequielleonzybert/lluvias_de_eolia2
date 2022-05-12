@@ -83,7 +83,6 @@ class Particle{
       else{
         delete = false;
       }
-
     }
     
     //Hover & Drag
