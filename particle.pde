@@ -61,7 +61,7 @@ class Particle{
       position.lerp(mouse_position, 0.1);
       velocity.set(0,0);
 
-      //Preparando para eliminar partícula
+      //Preparando para eliminar partícula:
       if(ui.hover_trash){
         delete = true;
       }
