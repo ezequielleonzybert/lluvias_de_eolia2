@@ -20,6 +20,7 @@ class Particle{
   void update(){ 
     
     //Físicas y disparar sonidos
+    //Si la partícula esta suelta:
     if(!drag){
       velocity.add(acceleration);
       PVector nextPosition = position.add(velocity);  
@@ -55,6 +56,7 @@ class Particle{
       }   
       position.add(velocity);
     }
+    //Si la partícula esta siendo arrastrada:
     else{
       position.lerp(mouse_position, 0.1);
       velocity.set(0,0);
