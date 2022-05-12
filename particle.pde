@@ -72,9 +72,8 @@ class Particle{
       else if(mouse_position.y < margin){
         mouse_position.y = margin;
       }
-
-      position.lerp(mouse_position, 0.1);
       
+      position.lerp(mouse_position, 0.1);
       velocity.set(0,0);
 
       //Preparando para eliminar partícula:
