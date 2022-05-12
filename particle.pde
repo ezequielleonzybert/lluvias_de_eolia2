@@ -58,7 +58,23 @@ class Particle{
     }
     //Si la partícula esta siendo arrastrada:
     else{
+      //si el mouse sale de la ventana:
+      float margin = radius + 10;
+      if(mouse_position.x > width - margin){
+        mouse_position.x = width - margin;
+      }
+      else if(mouse_position.x < margin){
+        mouse_position.x = margin;
+      }
+      if(mouse_position.y > height - margin){
+        mouse_position.y = height - margin;
+      }
+      else if(mouse_position.y < margin){
+        mouse_position.y = margin;
+      }
+
       position.lerp(mouse_position, 0.1);
+      
       velocity.set(0,0);
 
       //Preparando para eliminar partícula:
