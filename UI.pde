@@ -1,7 +1,9 @@
 class UI{
-  
+
   // -----------------------------ATRIBUTOS--------------------------
-  
+
+  float thickness = width * .0625;
+
   PVector 
     menu1_position, 
     menu1_target_position,
@@ -10,16 +12,29 @@ class UI{
     menu1_circle_position,
     menu1_tune_position,
     menu1_trash_position,
-    slideR_position,
-    slideL_position;
+
+    menu2_position, 
+    menu2_target_position,
+    menu2_hide_position,
+    menu2_show_position,
+    menu2_circle_position,
+    menu2_pot1_position,
+    menu2_pot2_position,
+    menu2_trash_position;
+
   float 
-    w, 
-    h,
-    radius,
+    menu1_w, 
+    menu1_h,
+    menu2_w, 
+    menu2_h,
+    slide_w,
+    slide_h,
+    radius, //radio de los botones
     show_radius,
     hide_radius,
     target_radius,
-    tune_angle;
+    tune_angle,
+    corners_radius;
   boolean 
     hover_circle,
     hover_tune,
@@ -38,43 +53,59 @@ class UI{
 
   // -----------------------------------MÉTODOS--------------------------------------------
   
- //----------------------------------CONSTRUCTOR-------------------------------------------
+  //----------------------------------CONSTRUCTOR-------------------------------------------
   UI(){
-    w = width / 4 ;
-    h = w / 2;
-    menu1_hide_position = new PVector(width/2, -h/2.5); //si pongo = position no funciona
-    menu1_show_position = new PVector(width/2, 0);
-    menu1_position = new PVector(width/2, -h/2.5);
-    menu1_target_position = new PVector(width/2, -h/2.5);
+    
+    //MENU 1
+
+    menu1_h = thickness;
+    menu1_w = thickness * 3.5;
+    menu1_hide_position = new PVector( width / 2 , - menu1_h / 4 );
+    menu1_show_position = new PVector( width / 2 , menu1_h * .5 );
+    menu1_position = new PVector( width /2 , - menu1_h / 4 );
+    menu1_target_position = new PVector( width /2 , - menu1_h / 4 );
     menu1_circle_position = new PVector();
     menu1_tune_position = new PVector();
     menu1_trash_position = new PVector();
     tune_angle = 0;
-    hide_radius = h/7.5;
-    show_radius = h/5.5;
-    radius = hide_radius;
-    target_radius = radius;
     tune = 'f';
     ptune = ' ';
     circle_color = color4;
+
+    //MENU 2
+
+    menu2_h = thickness;
+    menu2_w = thickness * 3.5 ;
+    menu2_hide_position = new PVector( width + width / 2 , - menu2_h / 4 );
+    menu2_show_position = new PVector( width + width / 2 , menu2_h * .5 );
+    menu2_position = new PVector(width + width /2 , - menu2_h / 4 );
+    menu2_target_position = new PVector( width + width /2 , - menu2_h / 4 );
+    menu2_circle_position = new PVector();
+    menu2_pot1_position = new PVector();
+    menu2_pot2_position = new PVector();
+    menu2_trash_position = new PVector();
+
+    //ALL menus
+    hide_radius = menu1_h * .25;
+    show_radius = menu1_h * .35;
+    radius = hide_radius;
+    target_radius = radius;    
+    corners_radius = menu1_w * .075;
+
   }
 
- //-------------------------------------UPDATE---------------------------------------
+  //-------------------------------------------------UPDATE--------------------------------------------------
 
   void update(){
-    
-    //Posición de menu y AUTO-HIDE
-    if(
-      mouseX > menu1_position.x - w/2 && 
-      mouseX < menu1_position.x + w/2 &&
-      mouseY < h/2 + 20
-      ){        
-      menu1_target_position.set(menu1_show_position);
+
+    //posicion y auto-hide menu 1
+    if(rectHover( menu1_position , menu1_w , menu1_h , 20 )){        
+      menu1_target_position.set(menu1_show_position) ;
       target_radius = show_radius;
       frame = -1;
     }
     else if(menu1_position.y == menu1_show_position.y){
-      menu1_target_position.set(menu1_hide_position); 
+      menu1_target_position.set(menu1_hide_position);
       target_radius = hide_radius;
       if(frame == -1){
         frame = frameCount;
@@ -89,19 +120,22 @@ class UI{
     if(frameDif > 60 || frameCount < 60){
       menu1_position.lerp(menu1_target_position, 0.1);
       radius = lerp(radius,target_radius,0.1);
-      menu1_circle_position.set(menu1_position.x -w/3.2, menu1_position.y + h/4);
-      menu1_tune_position.set(menu1_position.x, menu1_position.y + h/4);
-      menu1_trash_position.set(menu1_position.x + w/3.2, menu1_position.y + h/4);
     }
+    menu1_circle_position.set(menu1_position.x - menu1_w /3.2, menu1_position.y);
+    menu1_tune_position.set(menu1_position.x, menu1_position.y);
+    menu1_trash_position.set(menu1_position.x + menu1_w /3.2, menu1_position.y);
 
     if(menu1_target_position.y == menu1_show_position.y && menu1_show_position.y - menu1_position.y < 0.01){
       menu1_position.set(menu1_show_position);
     }
+
+   
+    
     
     //Hovers
-    hover_circle = getHover(menu1_circle_position);
-    hover_tune = getHover(menu1_tune_position);
-    hover_trash = getHover(menu1_trash_position);
+    hover_circle = circleHover(menu1_circle_position , radius , 10 );
+    hover_tune = circleHover(menu1_tune_position , radius , 10 );
+    hover_trash = circleHover(menu1_trash_position , radius , 10 );
 
     //cambio de tono
     if(drag_tune){
@@ -186,15 +220,16 @@ class UI{
     }    
   }
   
-//------------------------------------RENDER-----------------------------------------
+  //------------------------------------RENDER-----------------------------------------
 
   void render(){
     
-    //Barra
+    //MENU 1 y 2
     noStroke();
     rectMode(CENTER);
     fill(c2);
-    rect(menu1_position.x, menu1_position.y, w, h, w/12);
+    rect( menu1_position.x , menu1_position.y , menu1_w, menu1_h, 0 , 0 , corners_radius , corners_radius );
+    rect( menu2_position.x , menu2_position.y , menu2_w, menu2_h, 0 , 0 , corners_radius , corners_radius );
     rectMode(CORNER);
     
     //si la barra no está oculta renderizar los botones
@@ -204,9 +239,9 @@ class UI{
       noStroke();
       if(hover_circle && !mousePressed){
         fill(c5);
-        circle(menu1_circle_position.x, menu1_circle_position.y, radius*2);
+        circle( menu1_circle_position.x , menu1_circle_position.y , radius*2);
         fill(circle_color);
-        circle(menu1_circle_position.x, menu1_circle_position.y, radius*1.8);
+        circle( menu1_circle_position.x , menu1_circle_position.y, radius*1.8);
       }
       else{
         fill(c4);
@@ -294,16 +329,8 @@ class UI{
       }
 
       shape(trash, menu1_trash_position.x, menu1_trash_position.y);
-    }   
-  }
-  boolean getHover(PVector p){
-    if(mouse_position.dist(p) < radius + 10){
-        return true;
-      }
-      else{
-      return false; 
-      }
-  }
-}
+    }
 
-//-----------------------------METHODS------------------------
+  }
+  
+}
