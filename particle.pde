@@ -28,29 +28,28 @@ class Particle{
         velocity.y *= -1;
         switch(tone){
           case 'c':
-            //c.trigger();
-            sampler.trigger();
+            samplers[0].trigger();
           break;
           case 'd':
-            d.trigger();
+            samplers[1].trigger();
           break;
           case 'e':
-            e.trigger();
+            samplers[2].trigger();
           break;
           case 'f':
-            f.trigger();
+            samplers[3].trigger();
           break;
           case 'g':
-            g.trigger();
+            samplers[4].trigger();
           break;
           case 'a':
-            a.trigger();
+            samplers[5].trigger();
           break;
           case 'b':
-            b.trigger();
+            samplers[6].trigger();
           break;
           case 'C':
-            cc.trigger();
+            samplers[7].trigger();
           break;
         }
       }   

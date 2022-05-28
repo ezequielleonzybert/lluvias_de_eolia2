@@ -11,11 +11,14 @@ AudioPlayer
   select_c, select_d, select_e, select_f, 
   select_g, select_a, select_b, select_C,
   audio_delete, audio_grab;
+
+// AUDIO
 MultiChannelBuffer buffer;
 AudioOutput output;
-Sampler sampler;
+Sampler[] samplers;
 float rate;
 Gain gain;
+
 PImage cursor, cursor_open, cursor_close;
 PVector gravity, mouse_position;
 Point point, prev_point;
@@ -70,23 +73,19 @@ void setup(){
   cursor_open = loadImage("image/cursor_open.png");
   cursor_close = loadImage("image/cursor_close.png");
   
-  //Cargando sonidos
-  minim = new Minim(this);
-  output = minim.getLineOut();
-  buffer = new MultiChannelBuffer(512, 1);
-  rate = minim.loadFileIntoBuffer( "audio/c.wav", buffer );
-  sampler = new Sampler(buffer, rate, 8 );
-  gain = new Gain(-12);
-  sampler.patch(gain).patch(output);
+  // AUDIO
+  samplers = new Sampler[8]; //donde se cargan los archivos de sonido.
+  minim = new Minim(this); //el objeto que hace todo lo relacionado al audio
+  output = minim.getLineOut(); // el objeto que da la salida de audio
 
-  c = minim.loadSample("audio/c.wav", 512);
-  d = minim.loadSample("audio/d.wav", 512);
-  e = minim.loadSample("audio/e.wav", 512);
-  f = minim.loadSample("audio/f.wav", 512);
-  g = minim.loadSample("audio/g.wav", 512);
-  a = minim.loadSample("audio/a.wav", 512);
-  b = minim.loadSample("audio/b.wav", 512);
-  cc = minim.loadSample("audio/cc.wav", 512);
+  for(int i = 0; i < 8; i++){ //cargo los sonidos en cada samplers[]
+    samplers[i] = new Sampler("audio/" + str(i) + ".wav", 4, minim);
+    gain = new Gain(-12); //le bajo la ganancia para que no sature al superponerse
+    samplers[i].patch(gain).patch(output); //incluyo cada sample en la salida de audio
+  }
+
+//cargando los sonidos del UI, misma funcion que lo anterior pero otra manera de hacerlo. 
+//Pero así no me deja controlar las ganancias, lo que en este caso no me interesa.
   select_c = minim.loadFile("audio/select_c1.wav", 512);
   select_d = minim.loadFile("audio/select_d.wav", 512);
   select_e = minim.loadFile("audio/select_e.wav", 512);

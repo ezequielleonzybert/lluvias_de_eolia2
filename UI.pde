@@ -1,13 +1,43 @@
 class UI{
-  PVector position, target_position, hide_position, show_position, circle_position, tune_position, trash_position;
-  float w, h, margin, radius, show_radius, hide_radius, target_radius, tune_angle;
-  boolean hover_circle, hover_tune, hover_volume, hover_trash, drag_tune, position_locked;
-  PShape pot, border, circle, triangle, trash;
+  
+  // -----------------------------ATRIBUTOS--------------------------
+  
+  PVector 
+    position, 
+    target_position,
+    hide_position,
+    show_position,
+    circle_position,
+    tune_position,
+    trash_position;
+  float 
+    w, 
+    h,
+    margin,
+    radius,
+    show_radius,
+    hide_radius,
+    target_radius,
+    tune_angle;
+  boolean 
+    hover_circle
+     hover_tune,
+     hover_volume,
+     hover_trash,
+     drag_tune,
+     position_locked;
+  PShape 
+    pot,
+    border,
+    circle,
+    triangle,
+    trash;
   char tune, ptune;
   color circle_color;
+
+  // -----------------------------------MÉTODOS--------------------------------------------
   
  //----------------------------------CONSTRUCTOR-------------------------------------------
-
   UI(){
     w = width / 4 ;
     h = w / 2;
